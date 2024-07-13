@@ -10,10 +10,10 @@ releases:
   chart: ingress-nginx/ingress-nginx
   version: 4.10.1
   values:
-  - ./charts/ingress-controller/values.yaml
+  - ./manifests/charts/ingress-controller/values.yaml
 - name: jenkins
   namespace: jenkins
   chart: jenkins/jenkins
   version: 5.4.2
   values:
-  - ./charts/jenkins/values.yaml  
+  - ./manifests/charts/jenkins/values.yaml  
