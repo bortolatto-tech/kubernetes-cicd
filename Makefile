@@ -9,7 +9,7 @@ pre:
 		--timeout=300s pod
 
 create:
-	@kind create cluster --config projeto_completo/config.yaml
+	@kind create cluster --config config.yaml
 
 pool:
 	@kubectl apply -f manifests/metallb-pool.yaml
