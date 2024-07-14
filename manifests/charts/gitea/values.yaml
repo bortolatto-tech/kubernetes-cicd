@@ -411,7 +411,9 @@ gitea:
   #       name: gitea-app-ini-plaintext
 
   ## @param gitea.additionalConfigFromEnvs Additional configuration sources from environment variables
-  additionalConfigFromEnvs: []
+  additionalConfigFromEnvs:
+  - name: GITEA__webhook__ALLOWED_HOST_LIST
+    value: jenkins.jenkins.svc.cluster.local
 
   ## @param gitea.podAnnotations Annotations for the Gitea pod
   podAnnotations: {}
