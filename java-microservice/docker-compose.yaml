@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  app:
+    environment:
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_URL: jdbc:postgresql://postgres:5432/my_db
+    networks:
+      - network1
+    image: bortolattol/java-microservice
+
+networks:
+  network1:
+    name: compose-network
+    external: true
