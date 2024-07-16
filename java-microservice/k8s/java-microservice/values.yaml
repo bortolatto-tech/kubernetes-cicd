@@ -73,13 +73,18 @@ resources: {}
 
 livenessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /actuator/health/liveness
+    port: 8080
+  failureThreshold: 3
+  periodSeconds: 10
+  initialDelaySeconds: 5
 readinessProbe:
   httpGet:
-    path: /
-    port: http
-
+    path: /actuator/health/readiness
+    port: 8080
+  failureThreshold: 3
+  periodSeconds: 10  
+  initialDelaySeconds: 5
 autoscaling:
   enabled: false
   minReplicas: 1
@@ -105,3 +110,17 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+app:
+  dbUser: user
+  dbPass: password
+  dbName: my_db
+
+# Values for postgresql chart dependency
+postgresql:
+  auth:
+    postgresPassword: "dummy"
+    username: "dummy"
+    password: "dummy"
+    database: "dummy"
+  fullnameOverride: java-microservice-db

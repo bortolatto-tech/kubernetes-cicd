@@ -50,6 +50,17 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          env:
+          - name: DB_USER
+            value: {{ .Values.app.dbUser}}
+          - name: DB_PASS
+            value: {{ .Values.app.dbPass}}
+          - name: DB_URL
+            value: jdbc:postgresql://java-microservice-db:5432/{{ .Values.app.dbName}}
+          - name: LOGGING_LEVEL_COM_ZAXXER_HIKARI
+            value: TRACE
+          - name: SERVER_PORT
+            value: "8080"
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
