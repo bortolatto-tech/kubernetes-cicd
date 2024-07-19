@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Pod
+spec:
+  hostAliases:
+  - ip: "172.18.0.50"
+    hostnames:
+    - "gitea.localhost.com"
