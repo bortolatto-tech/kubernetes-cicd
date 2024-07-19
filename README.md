@@ -1,7 +1,7 @@
 # Simulando um ambiente de entrega contínua
 Um ambiente completo de CI/CD rodando em um cluster k8s, utilizando a estratégia de pull com ArgoCD e Jenkins.
 
-### Configuração webhook gitea
+## Configuração webhook gitea
 Adicionar configuração no gitea para adicionar o host do jenkins na lista de hosts confiáveis para webhook.
 ```
 additionalConfigFromEnvs:
@@ -9,7 +9,7 @@ additionalConfigFromEnvs:
     value: jenkins.jenkins.svc.cluster.local
 ```    
 
-### Configuração hosts Jenkins
+## Configuração hosts Jenkins
 Adicionar o ip do ingress controller no node do jenkins para que seja possível alcançar os serviços
 ```
 hostAliases:   
@@ -19,14 +19,14 @@ hostAliases:
 ```
 Alterar configuração em Manage Jenkins/Security/Git Host Key Verification Configuration para "Accept first connection" para que não dê erro de known-hosts na primeira tentativa de conexão ssh. Nas próximas conexões fará a verificação.
 
-### Configuração nginx ingress controle - expondo a porta 22
+## Configuração nginx ingress controle - expondo a porta 22
 Adicionar configuração para que seja possível fazer git clone via ssh de dentro do Jenkins com contas de serviço
 ```
 tcp:
   22: "gitea/gitea-ssh:22"
 ```
 
-### Instalando helm-chart da aplicação de exemplo "java-microservice"
+## Instalando helm-chart da aplicação de exemplo "java-microservice"
 Esta é uma aplicação Java que se conecta em um banco relacional PostgreSQL. O chart da aplicação declara uma dependência para o chart do postgresql.
 Ao instalar o chart da aplicação automaticamente o postgresql será instanciado.
 
@@ -45,3 +45,11 @@ helm upgrade --install teste-microservice java-microservice/ \
 --set postgresql.auth.username=teste \
 --set postgresql.auth.password=teste
 ```
+
+## Criando um PersistentVolume para utilizar cache do maven repository
+Para otimização do tempo da pipeline é importante termos uma maneira de cachear bibliotecas previamente baixadas.
+Para este projeto foi criado um `PersistentVolume` com tipo `local` e um `PersistentVolumeClaim`.
+O arquivo `./manifests/maven-pv.yaml` cria esses manifestos. Para utilização na pipeline, podemos declarar no template
+do pod (ver `Jenkinsfile` em `./java-microservice/Jenkinsfile`).
+O volume está com NodeAffinity em um dos workers, isso é obrigatório em tipos
+de volume `local`. É necessário que o diretório do volume exista previamente. Neste projeto foi decidido conectar-se ao container do node e criar o diretório manualmente.

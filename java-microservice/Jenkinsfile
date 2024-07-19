@@ -1,0 +1,26 @@
+podTemplate(yaml: '''
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      labels: 
+        some-label: some-label-value
+    spec:
+      hostAliases:
+      - ip: "172.18.0.50"
+        hostnames:
+        - "gitea.localhost.com"
+    ''', containers: [
+  containerTemplate(name: 'maven', image: 'maven', command: 'sleep', args: '99d')
+  ], volumes: [
+  persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'maven-repo-pvc', readOnly: false)
+  ]) {
+
+  node(POD_LABEL) {
+    stage('Build a Maven project') {
+      git credentialsId: 'jenkins', url: 'git@gitea.localhost.com:cicd/java-microservice.git'
+      container('maven') {
+        sh 'mvn clean install'
+      }
+    }
+  }
+}
