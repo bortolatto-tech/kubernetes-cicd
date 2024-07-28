@@ -5,6 +5,8 @@ repositories:
   url: https://charts.jenkins.io
 - name: gitea-charts
   url: https://dl.gitea.com/charts/
+- name: sonarqube
+  url: https://SonarSource.github.io/helm-chart-sonarqube
 
 releases:
 - name: ingress-nginx
@@ -25,3 +27,9 @@ releases:
   version: 10.1.1
   values:
   - ./manifests/charts/gitea/values.yaml
+- name: sonarqube
+  namespace: sonar
+  chart: sonarqube/sonarqube
+  version: 10.6.1+3163
+  values:
+  - ./manifests/charts/sonar/values.yaml
