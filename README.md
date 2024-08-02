@@ -53,3 +53,14 @@ O arquivo `./manifests/maven-pv.yaml` cria esses manifestos. Para utilização n
 do pod (ver `Jenkinsfile` em `./java-microservice/Jenkinsfile`).
 O volume está com NodeAffinity em um dos workers, isso é obrigatório em tipos
 de volume `local`. É necessário que o diretório do volume exista previamente. Neste projeto foi decidido conectar-se ao container do node e criar o diretório manualmente.
+
+## Configurações do Sonar
+Para evitar do Jenkins bater no ingress controller com o host externo do Sonar, decidi evitar esse tráfego desnecessário e configurei o host do serviço do Sonar como variável de ambiente no container, desta forma a comunicação fica direto no cluster sem passar por nenhum filtro de host. Trecho de configuração do Jenkinsfile do serviço `java-microservice`:
+```
+envVars: [
+    envVar(key: 'SONAR_HOST', value: 'sonarqube-sonarqube.sonar.svc.cluster.local:9000')
+]
+```
+
+Na configuração do Sonar dentro do Jenkins (Dashboard/Manage Jenkins/System), ao invés de colocar o host http://sonarqube.localhost.com substituí pela variável de ambiente criada previamente `SONAR_HOST`:
+![alt text](image.png)

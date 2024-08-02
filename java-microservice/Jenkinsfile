@@ -1,14 +1,24 @@
 podTemplate(yaml: readTrusted('podTemplate.yaml'), containers: [
-  containerTemplate(name: 'maven', image: 'maven:3.9.8-amazoncorretto-17', command: 'sleep', args: '99d')
-  ], volumes: [
+  containerTemplate(name: 'maven', image: 'maven:3.9.8-amazoncorretto-17', command: 'sleep', args: '99d')], 
+  envVars: [
+    envVar(key: 'SONAR_HOST', value: 'sonarqube-sonarqube.sonar.svc.cluster.local:9000')
+  ],
+  volumes: [
   persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'maven-repo-pvc', readOnly: false)
   ]) {
 
   node(POD_LABEL) {
-    stage('Build a Maven project') {
+    stage('unit tests') {
       git credentialsId: 'jenkins', url: 'git@gitea.localhost.com:cicd/java-microservice.git'
       container('maven') {
         sh 'mvn clean install'
+      }
+    }
+    stage('sonar') {
+      container('maven') {
+        withSonarQubeEnv() {
+          sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar'
+        }
       }
     }
   }
