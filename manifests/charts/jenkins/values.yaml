@@ -787,6 +787,7 @@ controller:
   - ip: 172.18.0.50
     hostnames:
       - gitea.localhost.com
+      - sonarqube.localhost.com
   # - ip: 10.0.50.50
   #   hostnames:
   #     - other.local
