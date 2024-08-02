@@ -5,3 +5,4 @@ spec:
   - ip: "172.18.0.50"
     hostnames:
     - "gitea.localhost.com"
+    - "sonarqube.localhost.com"

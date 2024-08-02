@@ -26,3 +26,6 @@ passwd:
 	@echo 'JENKINS: user admin' 
 	@kubectl get secrets -n jenkins jenkins -ojson | jq '.data."jenkins-admin-password"' | jq '@base64d' -r
 	@echo 'SONAR: admin/mb3ymxREBbX3Hyax'
+
+jenkins_passwd:
+	@kubectl get secrets -n jenkins jenkins -ojson | jq '.data."jenkins-admin-password"' | jq '@base64d' -r | xclip -sel c
