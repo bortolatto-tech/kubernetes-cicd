@@ -20,7 +20,7 @@ hostAliases:
 Alterar configuração em Manage Jenkins/Security/Git Host Key Verification Configuration para "Accept first connection" para que não dê erro de known-hosts na primeira tentativa de conexão ssh. Nas próximas conexões fará a verificação.
 
 ## Configuração nginx ingress controle - expondo a porta 22
-Adicionar configuração para que seja possível fazer git clone via ssh de dentro do Jenkins com contas de serviço
+Adicionar configuração nos values do nginx ingress controller para que seja possível fazer git clone via ssh de dentro do Jenkins com contas de serviço
 ```
 tcp:
   22: "gitea/gitea-ssh:22"
