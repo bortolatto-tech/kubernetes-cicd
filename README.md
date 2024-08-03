@@ -64,3 +64,53 @@ envVars: [
 
 Na configuração do Sonar dentro do Jenkins (Dashboard/Manage Jenkins/System), ao invés de colocar o host http://sonarqube.localhost.com substituí pela variável de ambiente criada previamente `SONAR_HOST`:
 ![alt text](image.png)
+
+## Configuração alternativa para a pipeline do Jenkins
+O arquivo abaixo é uma forma declarativa de configurar uma pipeline do Jenkins:
+
+```
+# Jenkinsfile-teste
+
+pipeline {
+    options {
+      disableConcurrentBuilds()
+    }
+    agent any
+    stages {
+        stage('unit test') {
+          steps {
+            container('maven') {
+              script {
+                  sh 'mvn clean'
+                  sh 'mvn install'
+              }
+            }
+          }
+        }
+        stage('sonar') {
+          environment {
+            SONAR_HOST = "sonarqube-sonarqube.sonar.svc.cluster.local:9000"
+          }
+          steps {
+            container('maven') {
+              withSonarQubeEnv('sonar') {
+                sh '''
+                mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922:sonar \
+                -Dsonar.token=${SONAR_AUTH_TOKEN} \
+                -Dsonar.projectName=${JOB_NAME%/*}-${BRANCH_NAME}
+                '''
+              } 
+            }
+          }
+        }
+    }
+}
+```
+
+Com o Jenkinsfile acima, é necessário configurar um container do maven no podTemplate padrão:
+![alt text](image-1.png)
+
+A parte do cache do maven também pode ser configurada direto no Jenkins:
+![alt text](image-2.png)
+
+A variável de ambiente `SONAR_HOST` foi configurada na parte de `environment` para que o plugin do sonar (withSonarQubeEnv) extraia o valor configurado. A diferença é que esse volume é montado para todos os containers, e na abordagem anterior (ver arquivos Jenkinsfile e podTemplate.yaml) era só aplicado no container do maven.
