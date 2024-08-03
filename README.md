@@ -88,9 +88,6 @@ pipeline {
           }
         }
         stage('sonar') {
-          environment {
-            SONAR_HOST = "sonarqube-sonarqube.sonar.svc.cluster.local:9000"
-          }
           steps {
             container('maven') {
               withSonarQubeEnv('sonar') {
@@ -108,9 +105,13 @@ pipeline {
 ```
 
 Com o Jenkinsfile acima, é necessário configurar um container do maven no podTemplate padrão:
-![alt text](image-1.png)
+![alt text](image-4.png)
 
 A parte do cache do maven também pode ser configurada direto no Jenkins:
 ![alt text](image-2.png)
+A diferença é que esse volume é montado para todos os containers, e na abordagem anterior (ver arquivos Jenkinsfile e podTemplate.yaml) era só aplicado no container do maven.
 
-A variável de ambiente `SONAR_HOST` foi configurada na parte de `environment` para que o plugin do sonar (withSonarQubeEnv) extraia o valor configurado. A diferença é que esse volume é montado para todos os containers, e na abordagem anterior (ver arquivos Jenkinsfile e podTemplate.yaml) era só aplicado no container do maven.
+Configurar a variável `SONAR_HOST` conforme abaixo:
+
+![alt text](image-3.png)
+
