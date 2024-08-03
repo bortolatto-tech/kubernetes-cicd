@@ -509,7 +509,80 @@ controller:
     configUrls: []
     # - https://acme.org/jenkins.yaml
     # -- List of Jenkins Config as Code scripts
-    configScripts: {}
+    configScripts:
+      pod-template: |
+        jenkins:
+          systemMessage: Bem vindo ao nosso CI\CD server. Este Jenkins é configurado e gerenciado 'como código'.
+          clouds:
+          - kubernetes:
+              templates:
+              - containers:
+                - name: "maven"
+                  image: "maven:3.9.8-amazoncorretto-17"
+                  args: "9999999"
+                  command: "sleep"
+                  workingDir: "/home/jenkins/agent"
+                envVars:
+                - envVar:
+                    key: "SONAR_HOST"
+                    value: "sonarqube-sonarqube.sonar.svc.cluster.local:9000"
+                volumes:
+                - persistentVolumeClaim:
+                    claimName: "maven-repo-pvc"
+                    mountPath: "/root/.m2/repository"
+                    readOnly: false
+                yaml: |-
+                  spec:
+                    hostAliases:
+                    - ip: "172.18.0.50"
+                      hostnames:
+                      - "gitea.localhost.com"
+                      - "sonarqube.localhost.com"
+                yamlMergeStrategy: "override"
+                yamls:
+                - |-
+                  spec:
+                    hostAliases:
+                    - ip: "172.18.0.50"
+                      hostnames:
+                      - "gitea.localhost.com"
+                      - "sonarqube.localhost.com"    
+      unclassified: |
+        unclassified:
+          buildDiscarders:
+            configuredBuildDiscarders:
+            - "jobBuildDiscarder"
+          fingerprints:
+            fingerprintCleanupDisabled: false
+            storage: "file"
+          junitTestResultStorage:
+            storage: "file"
+          location:
+            adminAddress: "não configurado <nobody@nowhere>"
+            url: "http://jenkins.localhost.com/"
+          mailer:
+            charset: "UTF-8"
+            useSsl: false
+            useTls: false
+          pollSCM:
+            pollingThreadCount: 10
+          scmGit:
+            addGitTagAction: false
+            allowSecondFetch: false
+            createAccountBasedOnEmail: false
+            disableGitToolChooser: false
+            hideCredentials: false
+            showEntireCommitSummaryInChanges: false
+            useExistingAccountWithSameEmail: false
+          sonarGlobalConfiguration:
+            buildWrapperEnabled: true
+            installations:
+            - credentialsId: "sonar-token"
+              name: "sonar"
+              serverUrl: "http://$SONAR_HOST"
+              triggers:
+                skipScmCause: false
+                skipUpstreamCause: false
     #  welcome-message: |
     #    jenkins:
     #      systemMessage: Welcome to our CI\CD server. This Jenkins is configured and managed 'as code'.
