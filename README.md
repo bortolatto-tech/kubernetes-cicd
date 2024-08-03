@@ -99,7 +99,7 @@ pipeline {
             container('maven') {
               script {
                   sh 'mvn clean'
-                  sh 'mvn install'
+                  sh 'mvn install jacoco:prepare-agent jacoco:report'
               }
             }
           }
@@ -113,7 +113,14 @@ pipeline {
                 -Dsonar.token=${SONAR_AUTH_TOKEN} \
                 -Dsonar.projectName=${JOB_NAME%/*}-${BRANCH_NAME}
                 '''
-              } 
+              }
+            }
+          }
+        }
+        stage("Quality Gate") {
+          steps {
+            timeout(time: 1, unit: 'MINUTES') {
+              waitForQualityGate abortPipeline: true
             }
           }
         }
