@@ -63,7 +63,8 @@ envVars: [
 ```
 
 Na configuração do Sonar dentro do Jenkins (Dashboard/Manage Jenkins/System), ao invés de colocar o host http://sonarqube.localhost.com substituí pela variável de ambiente criada previamente `SONAR_HOST`:
-![alt text](image.png)
+
+![alt text](./images/image-1.png)
 
 ## Configuração alternativa para a pipeline do Jenkins
 O arquivo abaixo é uma forma declarativa de configurar uma pipeline do Jenkins:
@@ -105,13 +106,15 @@ pipeline {
 ```
 
 Com o Jenkinsfile acima, é necessário configurar um container do maven no podTemplate padrão:
-![alt text](image-4.png)
+
+![alt text](./images/image-4.png)
 
 A parte do cache do maven também pode ser configurada direto no Jenkins:
-![alt text](image-2.png)
+
+![alt text](./images/image-2.png)
 A diferença é que esse volume é montado para todos os containers, e na abordagem anterior (ver arquivos Jenkinsfile e podTemplate.yaml) era só aplicado no container do maven.
 
 Configurar a variável `SONAR_HOST` conforme abaixo:
 
-![alt text](image-3.png)
+![alt text](./images/image-3.png)
 
