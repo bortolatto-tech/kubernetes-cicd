@@ -26,6 +26,8 @@ passwd:
 	@echo 'JENKINS: user admin' 
 	@kubectl get secrets -n jenkins jenkins -ojson | jq '.data."jenkins-admin-password"' | jq '@base64d' -r
 	@echo 'SONAR: admin/mb3ymxREBbX3Hyax'
+	@echo 'ARGO: admin'
+	@kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d 
 
 jenkins_passwd:
 	@kubectl get secrets -n jenkins jenkins -ojson | jq '.data."jenkins-admin-password"' | jq '@base64d' -r | xclip -sel c

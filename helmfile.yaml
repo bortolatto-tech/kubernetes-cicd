@@ -7,6 +7,8 @@ repositories:
   url: https://dl.gitea.com/charts/
 - name: sonarqube
   url: https://SonarSource.github.io/helm-chart-sonarqube
+- name: argocd
+  url: https://argoproj.github.io/argo-helm/
 
 releases:
 - name: ingress-nginx
@@ -33,3 +35,9 @@ releases:
   version: 10.6.1+3163
   values:
   - ./manifests/charts/sonar/values.yaml
+- name: argocd
+  namespace: argocd
+  chart: argo/argo-cd
+  version: 7.7.8
+  values:
+  - ./manifests/charts/argocd/values.yaml
