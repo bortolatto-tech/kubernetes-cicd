@@ -96,10 +96,10 @@ global:
   #  fsGroup: 999
 
   # -- Mapping between IP and hostnames that will be injected as entries in the pod's hosts files
-  hostAliases: []
-  # - ip: 10.20.30.40
-  #   hostnames:
-  #   - git.myhostname
+  hostAliases:
+   - ip: 172.18.0.50
+     hostnames:
+      - gitea.localhost.com
 
   # Configure dual-stack used by all component services
   dualStack:

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-gitea
+spec:
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
+  source:
+    path: base
+    repoURL: git@gitea.localhost.com:cicd/argocd-gitea.git
+    targetRevision: main
+  sources:
+    - repoURL: 'git@gitea.localhost.com:cicd/argocd-gitea.git'
+      path: apps
+      targetRevision: main
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
